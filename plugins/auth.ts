@@ -20,10 +20,5 @@ export default defineNuxtPlugin((nuxtApp) => {
         nuxtApp.$graphql.default.setHeader('Authorization', `Bearer ${authToken.value}`);
     };
 
-    const getAuthToken = () => {
-        return useState('AuthToken').value;
-    }
-
     nuxtApp.provide('setAuthToken', setAuthToken);
-    nuxtApp.provide('getAuthToken', getAuthToken);
 });

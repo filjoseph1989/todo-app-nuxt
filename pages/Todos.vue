@@ -19,8 +19,12 @@ const fetchTasks = gql`
     }`
 
 const getTasks = async () => {
-    const tasks = await $graphql.default.request(fetchTasks)
-    console.log(tasks);
+    try {
+        const tasks = await $graphql.default.request(fetchTasks)
+        console.log(tasks);
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 const router = useRouter();
@@ -44,13 +48,14 @@ const logout = async () => {
             user_id: userId.value
         });
         if (response?.logout?.message) {
+            useState('AuthToken').value = null;
             $setAuthToken(null);
             const authTokenCookie = useCookie('authToken');
             authTokenCookie.value = null;
             router.push('/');
         }
-    } catch (e) {
-        console.log(e)
+    } catch (error) {
+        console.log(error)
     }
 }
 </script>
