@@ -7,7 +7,7 @@
 <script setup>
 import { gql } from 'nuxt-graphql-request/utils';
 
-const { $graphql, $setAuthToken } = useNuxtApp();
+const { $graphql, $logout, $setAuthToken } = useNuxtApp();
 
 const fetchTasks = gql`
     query FetchTask {
@@ -34,6 +34,8 @@ const goToLogin = () => {
 }
 
 const logout = async () => {
+    $setAuthToken();
+
     const userId = useCookie('userId');
 
     const query = gql`
@@ -48,10 +50,7 @@ const logout = async () => {
             user_id: userId.value
         });
         if (response?.logout?.message) {
-            useState('AuthToken').value = null;
-            $setAuthToken(null);
-            const authTokenCookie = useCookie('authToken');
-            authTokenCookie.value = null;
+            $logout();
             router.push('/');
         }
     } catch (error) {

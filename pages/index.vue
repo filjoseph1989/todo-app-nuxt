@@ -20,9 +20,12 @@
 import { gql } from 'nuxt-graphql-request/utils';
 import { ref } from 'vue'
 
-const { $graphql, $setAuthToken } = useNuxtApp();
-const email = ref('')
-const password = ref('')
+const {
+  $graphql,
+  $setAuthToken,
+  $setUserId
+} = useNuxtApp();
+
 const router = useRouter();
 
 const query = gql`
@@ -42,8 +45,7 @@ const login = async () => {
 
     if (data.login.token) {
       $setAuthToken(data.login.token);
-      const userId = useCookie('userId');
-      userId.value = data.login.id;
+      $setUserId(data.login.id);
       router.push("/todos")
     }
   } catch (error) {
