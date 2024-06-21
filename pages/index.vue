@@ -28,7 +28,8 @@ const router = useRouter();
 const query = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
-        token
+      id
+      token
     }
   }`;
 
@@ -41,14 +42,8 @@ const login = async () => {
 
     if (data.login.token) {
       $setAuthToken(data.login.token);
-      const isLogin = useCookie('isLogin', {
-        path: '/',
-        secure: false,
-        sameSite: true,
-        maxAge: 3600,
-        httpOnly: false,
-      });
-      isLogin.value = "is login";
+      const userId = useCookie('userId');
+      userId.value = data.login.id;
       router.push("/todos")
     }
   } catch (error) {

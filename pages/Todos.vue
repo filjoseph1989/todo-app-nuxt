@@ -1,12 +1,13 @@
 <template>
     <button @click="goToLogin">Go back to login</button>
     <button @click="getTasks">Get Task</button>
+    <button @click="logout">Logout</button>
 </template>
 
 <script setup>
 import { gql } from 'nuxt-graphql-request/utils';
 
-const { $graphql } = useNuxtApp();
+const { $graphql, $setAuthToken } = useNuxtApp();
 
 const fetchTasks = gql`
     query FetchTask {
@@ -25,9 +26,31 @@ const getTasks = async () => {
 const router = useRouter();
 
 const goToLogin = () => {
-    router.push('/login');
+    router.push('/');
 }
 
-const isLogin = useCookie('isLogin');
-console.log(isLogin);
+const logout = async () => {
+    const userId = useCookie('userId');
+
+    const query = gql`
+        mutation Logout ($user_id: ID!) {
+            logout (user_id: $user_id) {
+                message
+            }
+        }`;
+
+    try {
+        const response = await $graphql.default.request(query, {
+            user_id: userId.value
+        });
+        if (response?.logout?.message) {
+            $setAuthToken(null);
+            const authTokenCookie = useCookie('authToken');
+            authTokenCookie.value = null;
+            router.push('/');
+        }
+    } catch (e) {
+        console.log(e)
+    }
+}
 </script>
