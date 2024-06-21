@@ -7,7 +7,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     const setAuthToken: SetAuthToken = (token: string) => {
         const authToken = useCookie('authToken', {
             path: '/',
-            secure: true,
+            secure: process.env.NODE_ENV === 'production',
             sameSite: true,
             maxAge: 3600,
             httpOnly: true,
