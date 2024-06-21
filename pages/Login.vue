@@ -20,9 +20,10 @@
 import { gql } from 'nuxt-graphql-request/utils';
 import { ref } from 'vue'
 
-const { $graphql } = useNuxtApp();
+const { $graphql, $setAuthToken } = useNuxtApp();
 const email = ref('')
 const password = ref('')
+const router = useRouter();
 
 const query = gql`
   mutation Login($email: String!, $password: String!) {
@@ -33,7 +34,15 @@ const query = gql`
 
 const login = async () => {
   try {
-    const data = await $graphql.auth.request(query, { email: email.value, password: password.value });
+    const data = await $graphql.auth.request(query, {
+      email: email.value,
+      password: password.value
+    });
+
+    if (data.login.token) {
+      $setAuthToken(data.login.token)
+      router.push("/todos")
+    }
   } catch (error) {
     console.error(JSON.stringify(error, undefined, 2));
     process.exit(1);
