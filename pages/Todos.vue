@@ -19,6 +19,7 @@ const fetchTasks = gql`
 
 const getTasks = async () => {
     const tasks = await $graphql.default.request(fetchTasks)
+    console.log(tasks);
 }
 
 const router = useRouter();
@@ -26,4 +27,7 @@ const router = useRouter();
 const goToLogin = () => {
     router.push('/login');
 }
+
+const isLogin = useCookie('isLogin');
+console.log(isLogin);
 </script>

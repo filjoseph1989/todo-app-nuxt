@@ -13,37 +13,17 @@ export default defineNuxtPlugin((nuxtApp) => {
             httpOnly: true,
         })
         authToken.value = token;
+
+        const authState = useState('authToken', () => token);
+        authState.value = token;
+
         nuxtApp.$graphql.default.setHeader('Authorization', `Bearer ${authToken.value}`);
-        console.log(authToken.value)
     };
+
+    const getAuthToken = () => {
+        return useState('AuthToken').value;
+    }
 
     nuxtApp.provide('setAuthToken', setAuthToken);
-
-    type ClearAuthToken = () => void;
-
-    const clearAuthToken: ClearAuthToken = () => {
-        const authToken = useCookie('authToken', {
-            path: '/',
-            secure: true,
-            sameSite: true,
-            maxAge: 3600,
-            httpOnly: true,
-        })
-        authToken.value = null;
-    };
-
-    nuxtApp.provide('clearAuthToken', (token: string) => clearAuthToken);
-
-    type SetAuthorizationHeader = () => void;
-
-    const setAuthorizationHeader: SetAuthorizationHeader = () => {
-        const authToken = useCookie('authToken');
-        console.log("setting a header", authToken, authToken.value);
-        if (authToken.value) {
-            nuxtApp.$graphql.default.setHeader('Authorization', `Bearer ${authToken.value}`);
-        }
-    };
-
-    nuxtApp.hook('app:mounted', setAuthorizationHeader);
-    nuxtApp.provide('setAuthorizationHeader', setAuthorizationHeader);
+    nuxtApp.provide('getAuthToken', getAuthToken);
 });

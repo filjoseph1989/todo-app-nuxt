@@ -40,7 +40,15 @@ const login = async () => {
     });
 
     if (data.login.token) {
-      $setAuthToken(data.login.token)
+      $setAuthToken(data.login.token);
+      const isLogin = useCookie('isLogin', {
+        path: '/',
+        secure: false,
+        sameSite: true,
+        maxAge: 3600,
+        httpOnly: false,
+      });
+      isLogin.value = "is login";
       router.push("/todos")
     }
   } catch (error) {
