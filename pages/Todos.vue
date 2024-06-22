@@ -51,7 +51,6 @@ const logout = async () => {
             user_id: store.getUserId
         });
         if (response?.logout?.message) {
-            $logout();
             store.clearUser();
             navigateTo('/');
         }

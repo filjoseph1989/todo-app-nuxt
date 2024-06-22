@@ -17,49 +17,6 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '~/stores/user';
-import { gql } from 'nuxt-graphql-request/utils';
-import { ref } from 'vue'
-
-const {
-  $graphql,
-  $setAuthToken,
-  $setUserId
-} = useNuxtApp();
-
-const email = ref('test@example.com')
-const password = ref('password')
-const store = useUserStore();
-
-const query = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      id
-      token
-    }
-  }`;
-
-const login = async () => {
-  try {
-    const data = await $graphql.auth.request(query, {
-      email: email.value,
-      password: password.value
-    });
-
-    if (data?.login?.token) {
-      $setAuthToken(data.login.token);
-      $setUserId(data.login.id);
-
-      store.setUser(true)
-      store.setUserId(data.login.id)
-
-      // Redirect to page /todos
-      navigateTo('/todos');
-    } else {
-      console.log('Invalid email or password')
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
+import { useLogin } from '~/composables/useLogin';
+const { email, password, login} = useLogin();
 </script>
