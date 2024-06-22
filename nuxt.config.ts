@@ -1,3 +1,5 @@
+import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+
 export default defineNuxtConfig({
   plugins: [
     "~/plugins/auth.ts"
@@ -6,9 +8,17 @@ export default defineNuxtConfig({
     "nuxt-graphql-request",
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
+    (_options, nuxt) => {
+      nuxt.hooks.hook('vite:extendConfig', (config) => {
+        config.plugins.push(vuetify({ autoImport: true }))
+      })
+    },
   ],
   build: {
-    transpile: ['nuxt-graphql-request'],
+    transpile: [
+      'nuxt-graphql-request',
+      'vuetify',
+    ],
   },
   graphql: {
     clients: {
@@ -28,5 +38,12 @@ export default defineNuxtConfig({
     autoImports: [
       'defineStore'
     ]
-  }
+  },
+  vite: {
+    vue: {
+      template: {
+        transformAssetUrls,
+      },
+    },
+  },
 });
