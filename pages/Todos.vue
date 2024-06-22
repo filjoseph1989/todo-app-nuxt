@@ -28,15 +28,11 @@ const getTasks = async () => {
     }
 }
 
-const router = useRouter();
-
 const goToLogin = () => {
-    router.push('/');
+    navigateTo('/');
 }
 
 const logout = async () => {
-    $setAuthToken();
-
     const userId = useCookie('userId');
 
     const query = gql`
@@ -47,12 +43,13 @@ const logout = async () => {
         }`;
 
     try {
+        $setAuthToken();
         const response = await $graphql.default.request(query, {
             user_id: userId.value
         });
         if (response?.logout?.message) {
             $logout();
-            router.push('/');
+            navigateTo('/');
         }
     } catch (error) {
         console.log(error)

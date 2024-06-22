@@ -29,7 +29,6 @@ const {
 
 const email = ref('test@example.com')
 const password = ref('password')
-const router = useRouter();
 const store = useUserStore();
 
 const query = gql`
@@ -47,7 +46,7 @@ const login = async () => {
       password: password.value
     });
 
-    if (data.login.token) {
+    if (data?.login?.token) {
       $setAuthToken(data.login.token);
       $setUserId(data.login.id);
 
@@ -55,10 +54,11 @@ const login = async () => {
 
       // Redirect to page /todos
       navigateTo('/todos');
+    } else {
+      console.log('Invalid email or password')
     }
   } catch (error) {
-    console.error(JSON.stringify(error, undefined, 2));
-    process.exit(1);
+    console.error(error);
   }
 }
 </script>
