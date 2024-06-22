@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   plugins: [
     "~/plugins/auth.ts"
@@ -12,9 +11,11 @@ export default defineNuxtConfig({
   graphql: {
     clients: {
       default: {
+        endpoint: `${process.env.GRAPHQL_URL}`,
         options: {},
       },
       auth: {
+        endpoint: `${process.env.GRAPHQL_AUTH_URL}`,
       },
     },
   },
