@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form @submit.prevent="login">
+    <form @submit.prevent="login" method="post">
       <label>
         Username:
         <input v-model="email" type="text" name="email" required autocomplete="email" />
@@ -19,6 +19,7 @@
 <script setup lang="ts">
 import { gql } from 'nuxt-graphql-request/utils';
 import { ref } from 'vue'
+import { useUserStore } from '~/stores/user';
 
 const {
   $graphql,
@@ -26,7 +27,10 @@ const {
   $setUserId
 } = useNuxtApp();
 
+const email = ref('test@example.com')
+const password = ref('password')
 const router = useRouter();
+const store = useUserStore();
 
 const query = gql`
   mutation Login($email: String!, $password: String!) {
@@ -46,7 +50,11 @@ const login = async () => {
     if (data.login.token) {
       $setAuthToken(data.login.token);
       $setUserId(data.login.id);
-      router.push("/todos")
+
+      store.setUser(true)
+
+      // Redirect to page /todos
+      navigateTo('/todos');
     }
   } catch (error) {
     console.error(JSON.stringify(error, undefined, 2));

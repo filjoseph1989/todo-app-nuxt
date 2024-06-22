@@ -4,6 +4,8 @@ export default defineNuxtConfig({
   ],
   modules: [
     "nuxt-graphql-request",
+    "@pinia/nuxt",
+    "@pinia-plugin-persistedstate/nuxt",
   ],
   build: {
     transpile: ['nuxt-graphql-request'],
@@ -21,5 +23,10 @@ export default defineNuxtConfig({
   },
   router: {
     middleware: 'auth'
+  },
+  pinia:  {
+    autoImports: [
+      'defineStore'
+    ]
   }
 });
