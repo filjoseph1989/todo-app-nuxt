@@ -6,8 +6,10 @@
 
 <script setup>
 import { gql } from 'nuxt-graphql-request/utils';
+import { useUserStore } from '~/stores/user';
 
-const { $graphql, $logout, $setAuthToken } = useNuxtApp();
+const { $graphql, $logout } = useNuxtApp();
+const store = useUserStore();
 
 const fetchTasks = gql`
     query FetchTask {
@@ -18,9 +20,13 @@ const fetchTasks = gql`
         }
     }`
 
+// Redirect user back to `/` to login
+definePageMeta({
+    middleware: 'auth'
+});
+
 const getTasks = async () => {
     try {
-        $setAuthToken();
         const tasks = await $graphql.default.request(fetchTasks)
         console.log(tasks);
     } catch (error) {
@@ -33,8 +39,6 @@ const goToLogin = () => {
 }
 
 const logout = async () => {
-    const userId = useCookie('userId');
-
     const query = gql`
         mutation Logout ($user_id: ID!) {
             logout (user_id: $user_id) {
@@ -43,20 +47,16 @@ const logout = async () => {
         }`;
 
     try {
-        $setAuthToken();
         const response = await $graphql.default.request(query, {
-            user_id: userId.value
+            user_id: store.getUserId
         });
         if (response?.logout?.message) {
             $logout();
+            store.clearUser();
             navigateTo('/');
         }
     } catch (error) {
         console.log(error)
     }
 }
-
-definePageMeta({
-    middleware: 'auth'
-});
 </script>

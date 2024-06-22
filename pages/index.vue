@@ -17,9 +17,9 @@
 </template>
 
 <script setup lang="ts">
+import { useUserStore } from '~/stores/user';
 import { gql } from 'nuxt-graphql-request/utils';
 import { ref } from 'vue'
-import { useUserStore } from '~/stores/user';
 
 const {
   $graphql,
@@ -51,6 +51,7 @@ const login = async () => {
       $setUserId(data.login.id);
 
       store.setUser(true)
+      store.setUserId(data.login.id)
 
       // Redirect to page /todos
       navigateTo('/todos');

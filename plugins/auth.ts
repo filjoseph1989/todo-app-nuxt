@@ -19,22 +19,15 @@ export default defineNuxtPlugin((nuxtApp) => {
             nuxtApp.$graphql.default.setHeader('Authorization', `Bearer ${getToken()}`);
             return;
         }
-        
+
         const authToken = useCookie('authToken', cookieOptions)
         authToken.value = token;
 
         nuxtApp.$graphql.default.setHeader('Authorization', `Bearer ${authToken.value}`);
     };
 
-    const setUserId: SetUserId = (id: string) => {
-        const userId = useCookie('userId', cookieOptions)
-        userId.value = id;
-    };
-
     const logout: SetUserId = (id: string) => {
         const token = useCookie('authToken')
-        const userId = useCookie('userId')
-        userId.value = null;
         token.value = null;
     };
 
@@ -43,6 +36,5 @@ export default defineNuxtPlugin((nuxtApp) => {
     };
 
     nuxtApp.provide('setAuthToken', setAuthToken);
-    nuxtApp.provide('setUserId', setUserId);
     nuxtApp.provide('logout', logout);
 });

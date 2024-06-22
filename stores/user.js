@@ -2,10 +2,12 @@ import { defineStore } from 'pinia';
 
 export const useUserStore = defineStore('user', {
     state: () => ({
-        user: null
+        user: null,
+        userId: null
     }),
     getters: {
-        isLoggedIn: (state) => !!state.user
+        isLoggedIn: (state) => !!state.user,
+        getUserId: (state) => state.userId
     },
     actions: {
         setUser(user) {
@@ -13,11 +15,14 @@ export const useUserStore = defineStore('user', {
         },
         clearUser() {
             this.user = null;
+        },
+        setUserId(id) {
+            this.userId = id;
         }
     },
     persist: {
         storage: persistedState.cookiesWithOptions({
             sameSite: 'strict',
         }),
-    }, 
+    },
 });
