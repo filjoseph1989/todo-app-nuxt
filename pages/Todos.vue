@@ -57,4 +57,8 @@ const logout = async () => {
         console.log(error)
     }
 }
+
+definePageMeta({
+    middleware: 'auth'
+});
 </script>
