@@ -10,4 +10,9 @@ export default defineNuxtRouteMiddleware((to, from) => {
     if (!userStore.isLoggedIn && to.path != '/') {
         return navigateTo('/');
     }
+    
+
+    if (userStore.isLoggedIn && to.path == '/') {
+        return navigateTo('/todos');
+    }
 })

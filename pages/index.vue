@@ -23,6 +23,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  middleware: 'auth'
+});
+
 import { useLogin } from '~/composables/useLogin';
 const { email, password, login} = useLogin();
 </script>
