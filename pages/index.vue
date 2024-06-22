@@ -1,19 +1,25 @@
 <template>
-  <div>
-    <form @submit.prevent="login" method="post">
-      <label>
-        Username:
-        <input v-model="email" type="text" name="email" required autocomplete="email" />
-      </label>
-      <br />
-      <label>
-        Password:
-        <input v-model="password" type="password" name="password" required autocomplete="current-password" />
-      </label>
-      <br />
-      <button type="submit">Login</button>
-    </form>
-  </div>
+  <v-container>
+    <v-form @submit.prevent="login">
+      <v-text-field
+        v-model="email"
+        label="Email"
+        type="text"
+        name="email"
+        required
+        autocomplete="email"
+      ></v-text-field>
+      <v-text-field
+        v-model="password"
+        label="Password"
+        type="password"
+        name="password"
+        required
+        autocomplete="current-password"
+      ></v-text-field>
+      <v-btn type="submit" color="primary">Login</v-btn>
+    </v-form>
+  </v-container>
 </template>
 
 <script setup lang="ts">
