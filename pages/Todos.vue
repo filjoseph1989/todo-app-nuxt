@@ -20,6 +20,7 @@ const fetchTasks = gql`
 
 const getTasks = async () => {
     try {
+        $setAuthToken();
         const tasks = await $graphql.default.request(fetchTasks)
         console.log(tasks);
     } catch (error) {
