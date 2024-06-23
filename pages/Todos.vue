@@ -22,8 +22,8 @@
                     <v-list-item-action start>
                         <v-checkbox-btn
                             v-model="task.status"
-                            :value="'DONE'"
-                            :false-value="'TODO'">
+                            :value="'done'"
+                            :false-value="'todo'">
                         </v-checkbox-btn>
                     </v-list-item-action>
                 </template>
@@ -38,8 +38,8 @@
                     <v-list-item-action start>
                         <v-checkbox-btn
                             v-model="newTodoStatus"
-                            :value="'DONE'"
-                            :false-value="'TODO'">
+                            :value="'done'"
+                            :false-value="'todo'">
                         </v-checkbox-btn>
                     </v-list-item-action>
                 </template>
@@ -90,8 +90,8 @@ definePageMeta({
 });
 
 const totalTask = computed(() => tasks.value.length );
-const todoTask = computed(() => tasks.value.filter(task => task.status === 'TODO').length );
-const doneTask = computed(() => tasks.value.filter(task => task.status === 'DONE').length );
+const todoTask = computed(() => tasks.value.filter(task => task.status === 'todo').length );
+const doneTask = computed(() => tasks.value.filter(task => task.status === 'done').length );
 
 const removeTask = (taskId) => {
     if (deleteTask(taskId)) {
@@ -101,25 +101,35 @@ const removeTask = (taskId) => {
 
 const newTodoVisible = ref(false)
 const newTodoText = ref('')
-const newTodoStatus = ref('TODO')
+const newTodoStatus = ref('todo')
 
 const toggleNewTodo = () => {
     newTodoVisible.value = !newTodoVisible.value;
     if (!newTodoVisible.value) {
         newTodoText.value = '';
-        newTodoStatus.value = 'TODO';
+        newTodoStatus.value = 'todo';
     }
 }
 
-const addNewTask = () => {
+import { CREATE_TASK } from "~/graphql/queries";
+import { useUserStore } from '~/stores/user';
+
+const { $graphql } = useNuxtApp();
+const store = useUserStore()
+
+const addNewTask = async () => {
     if (newTodoText.value.trim() !== '') {
         const newTask = {
-            id: tasks.value.length + 1,
             task: newTodoText.value,
-            status: newTodoStatus.value
+            user_id: store.getUserId
         }
-        tasks.value.push(newTask);
-        toggleNewTodo();
+        const response = await $graphql.default.request(CREATE_TASK, newTask)
+
+        if (response) {
+            tasks.value.push(response.createTask);
+            newTodoText.value = '';
+            toggleNewTodo();
+        }
     }
 }
 </script>

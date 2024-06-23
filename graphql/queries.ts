@@ -28,3 +28,12 @@ export const DELETE_TASK = gql`
   mutation DeleteTask ($id: ID!, $user_id: ID!) {
     deleteTask (id: $id, user_id: $user_id)
   }`;
+
+export const CREATE_TASK = gql`
+  mutation CreateTask($task: String!, $user_id: ID!) {
+    createTask (task: $task, user_id: $user_id) {
+      id
+      task
+      status
+    }
+  }`
