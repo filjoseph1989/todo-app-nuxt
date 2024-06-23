@@ -5,20 +5,10 @@
 </template>
 
 <script setup>
-import { gql } from 'nuxt-graphql-request/utils';
-import { useUserStore } from '~/stores/user';
+import { useLogout } from '~/composables/useLogout';
 
-const { $graphql, $logout } = useNuxtApp();
-const store = useUserStore();
-
-const fetchTasks = gql`
-    query FetchTask {
-        task {
-            id
-            task
-            status
-        }
-    }`
+const { $graphql } = useNuxtApp();
+const { logout } = useLogout();
 
 // Redirect user back to `/` to login
 definePageMeta({
@@ -36,26 +26,5 @@ const getTasks = async () => {
 
 const goToLogin = () => {
     navigateTo('/');
-}
-
-const logout = async () => {
-    const query = gql`
-        mutation Logout ($user_id: ID!) {
-            logout (user_id: $user_id) {
-                message
-            }
-        }`;
-
-    try {
-        const response = await $graphql.default.request(query, {
-            user_id: store.getUserId
-        });
-        if (response?.logout?.message) {
-            store.clearUser();
-            navigateTo('/');
-        }
-    } catch (error) {
-        console.log(error)
-    }
 }
 </script>

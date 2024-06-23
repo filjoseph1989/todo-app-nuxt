@@ -7,3 +7,11 @@ export const LOGIN_MUTATION = gql`
       token
     }
   }`;
+
+export const LOGOUT = gql`
+  mutation Logout ($user_id: ID!) {
+    logout (user_id: $user_id) {
+      message
+    }
+  }`;
+  }`;
