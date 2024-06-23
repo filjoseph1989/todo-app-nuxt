@@ -1,19 +1,49 @@
 <template>
-    <button @click="goToLogin">Go back to login</button>
-    <button @click="getTasks">Get Task</button>
-    <button @click="logout">Logout</button>
+    <v-app-bar app dense>
+      <v-container class="d-flex justify-end">
+        <v-btn @click="logout" color="primary" dark>Logout</v-btn>
+      </v-container>
+    </v-app-bar>
+
+    <v-container class="d-flex align-center justify-center" style="min-height: 95vh">
+      <v-card class="pa-4" max-width="500" width="500">
+        <v-card-title class="headline">Todos</v-card-title>
+        <v-card-text>
+          <v-list lines="one">
+            <v-list-item value="widgets" v-for="task in tasks">
+                <template v-slot:prepend="{ isActive }">
+                    <v-list-item-action start>
+                        <v-checkbox-btn
+                            v-model="task.status"
+                            :value="'DONE'"
+                            :false-value="'TODO'">
+                        </v-checkbox-btn>
+                    </v-list-item-action>
+                </template>
+                <v-list-item-title>{{ task.task }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-card-text>
+      </v-card>
+    </v-container>
 </template>
 
 <script setup>
 import { useLogout } from '~/composables/useLogout';
+import { useFetchTask } from '~/composables/useFetchTask';
 const { logout } = useLogout();
+const { getTasks, tasks } = useFetchTask();
+
+const fetchTask = () => {
+    getTasks();
+}
+
+onMounted(() => {
+    fetchTask();
+})
 
 // Redirect user back to `/` to login
 definePageMeta({
     middleware: 'auth'
 });
-
-const goToLogin = () => {
-    navigateTo('/');
-}
 </script>

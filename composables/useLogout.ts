@@ -1,10 +1,10 @@
 import { useUserStore } from '~/stores/user';
 import { LOGOUT } from '~/graphql/queries';
 
-const { $graphql } = useNuxtApp();
-const store = useUserStore();
-
 export const useLogout = () => {
+    const store = useUserStore();
+    const { $graphql } = useNuxtApp();
+
     const logout = async () => {
         try {
             const response = await $graphql.default.request(LOGOUT, {
