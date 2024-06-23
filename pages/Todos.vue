@@ -72,10 +72,20 @@
 import { useLogout } from '~/composables/useLogout';
 import { useFetchTask } from '~/composables/useFetchTask';
 import { useDeleteTask } from '~/composables/useDeleteTask';
+import { useUpdateTask } from '~/composables/useUpdateTask';
+import { useAddNewTask } from '~/composables/useAddNewTask';
 
 const { logout } = useLogout();
 const { getTasks, tasks } = useFetchTask();
 const { deleteTask } = useDeleteTask();
+
+const totalTask = computed(() => tasks.value.length );
+const todoTask = computed(() => tasks.value.filter(task => task.status === 'todo').length );
+const doneTask = computed(() => tasks.value.filter(task => task.status === 'done').length );
+
+const newTodoVisible = ref(false)
+const newTodoText = ref('')
+const newTodoStatus = ref('todo')
 
 const fetchTask = () => {
     getTasks();
@@ -90,19 +100,11 @@ definePageMeta({
     middleware: 'auth'
 });
 
-const totalTask = computed(() => tasks.value.length );
-const todoTask = computed(() => tasks.value.filter(task => task.status === 'todo').length );
-const doneTask = computed(() => tasks.value.filter(task => task.status === 'done').length );
-
 const removeTask = (taskId) => {
     if (deleteTask(taskId)) {
         tasks.value = tasks.value.filter(task => task.id !== taskId)
     }
 }
-
-const newTodoVisible = ref(false)
-const newTodoText = ref('')
-const newTodoStatus = ref('todo')
 
 const toggleNewTodo = () => {
     newTodoVisible.value = !newTodoVisible.value;
@@ -112,29 +114,15 @@ const toggleNewTodo = () => {
     }
 }
 
-import { CREATE_TASK } from "~/graphql/queries";
-import { useUserStore } from '~/stores/user';
-
-const { $graphql } = useNuxtApp();
-const store = useUserStore()
-
-const addNewTask = async () => {
-    if (newTodoText.value.trim() !== '') {
-        const newTask = {
-            task: newTodoText.value,
-            user_id: store.getUserId
-        }
-        const response = await $graphql.default.request(CREATE_TASK, newTask)
-
-        if (response) {
-            tasks.value.push(response.createTask);
-            newTodoText.value = '';
-            toggleNewTodo();
-        }
+const addNewTask = () => {
+    const { addNewTask } = useAddNewTask();
+    const response = addNewTask(newTodoText.value);
+    if (response) {
+        tasks.value.push(response.createTask);
+        newTodoText.value = '';
+        toggleNewTodo();
     }
 }
-
-import { useUpdateTask } from '~/composables/useUpdateTask';
 
 const { updateTask } = useUpdateTask()
 </script>
