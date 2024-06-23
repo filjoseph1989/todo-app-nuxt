@@ -14,4 +14,12 @@ export const LOGOUT = gql`
       message
     }
   }`;
+
+export const FETCH_TASKS = gql`
+  query FetchTask {
+    task {
+      id
+      task
+      status
+    }
   }`;
