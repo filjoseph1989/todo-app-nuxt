@@ -32,6 +32,35 @@
                     <v-icon @click="removeTask(task.id)">mdi-close</v-icon>
                 </template>
             </v-list-item>
+
+            <v-list-item v-if="newTodoVisible">
+                <template v-slot:prepend>
+                    <v-list-item-action start>
+                        <v-checkbox-btn
+                            v-model="newTodoStatus"
+                            :value="'DONE'"
+                            :false-value="'TODO'">
+                        </v-checkbox-btn>
+                    </v-list-item-action>
+                </template>
+                <v-text-field
+                    v-model="newTodoText"
+                    label="New Todo"
+                    @keyup.enter="addNewTask">
+                </v-text-field>
+                <template v-slot:append>
+                    <v-icon @click="toggleNewTodo" color="red">mdi-close</v-icon>
+                </template>
+            </v-list-item>
+
+            <v-list-item v-else @click="toggleNewTodo">
+                <template v-slot:prepend>
+                    <v-list-item-action start>
+                        <v-icon color="primary">mdi-plus</v-icon>
+                    </v-list-item-action>
+                </template>
+                <v-list-item-title>New Todo</v-list-item-title>
+            </v-list-item>
           </v-list>
         </v-card-text>
       </v-card>
@@ -67,6 +96,30 @@ const doneTask = computed(() => tasks.value.filter(task => task.status === 'DONE
 const removeTask = (taskId) => {
     if (deleteTask(taskId)) {
         tasks.value = tasks.value.filter(task => task.id !== taskId)
+    }
+}
+
+const newTodoVisible = ref(false)
+const newTodoText = ref('')
+const newTodoStatus = ref('TODO')
+
+const toggleNewTodo = () => {
+    newTodoVisible.value = !newTodoVisible.value;
+    if (!newTodoVisible.value) {
+        newTodoText.value = '';
+        newTodoStatus.value = 'TODO';
+    }
+}
+
+const addNewTask = () => {
+    if (newTodoText.value.trim() !== '') {
+        const newTask = {
+            id: tasks.value.length + 1,
+            task: newTodoText.value,
+            status: newTodoStatus.value
+        }
+        tasks.value.push(newTask);
+        toggleNewTodo();
     }
 }
 </script>
