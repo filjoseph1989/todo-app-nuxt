@@ -7,7 +7,12 @@
 
     <v-container class="d-flex align-center justify-center" style="min-height: 95vh">
       <v-card class="pa-4" max-width="500" width="500">
-        <v-card-title class="headline">Todos</v-card-title>
+        <v-card-title class="headline">
+            Todos
+            <v-chip class="mr-1" color="primary" text-color="white">{{ totalTask }} All</v-chip>
+            <v-chip class="mr-1" color="red" text-color="white">{{ todoTask }} Todos</v-chip>
+            <v-chip class="mr-1" color="green" text-color="white">{{ doneTask }} Done</v-chip>
+        </v-card-title>
         <v-card-text>
           <v-list lines="one">
             <v-list-item value="widgets" v-for="task in tasks">
@@ -46,4 +51,8 @@ onMounted(() => {
 definePageMeta({
     middleware: 'auth'
 });
+
+const totalTask = computed(() => tasks.value.length );
+const todoTask = computed(() => tasks.value.filter(task => task.status === 'TODO').length );
+const doneTask = computed(() => tasks.value.filter(task => task.status === 'DONE').length );
 </script>
