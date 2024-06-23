@@ -7,11 +7,13 @@
 
     <v-container class="d-flex align-center justify-center" style="min-height: 95vh">
       <v-card class="pa-4" max-width="500" width="500">
-        <v-card-title class="headline">
+        <v-card-title class="headline d-flex justify-space-between">
             Todos
-            <v-chip class="mr-1" color="primary" text-color="white">{{ totalTask }} All</v-chip>
-            <v-chip class="mr-1" color="red" text-color="white">{{ todoTask }} Todos</v-chip>
-            <v-chip class="mr-1" color="green" text-color="white">{{ doneTask }} Done</v-chip>
+            <div>
+                <v-chip class="mr-1" color="primary" text-color="white">{{ totalTask }} All</v-chip>
+                <v-chip class="mr-1" color="red" text-color="white">{{ todoTask }} Todos</v-chip>
+                <v-chip color="green" text-color="white">{{ doneTask }} Done</v-chip>
+            </div>
         </v-card-title>
         <v-card-text>
           <v-list lines="one">
@@ -26,6 +28,9 @@
                     </v-list-item-action>
                 </template>
                 <v-list-item-title>{{ task.task }}</v-list-item-title>
+                <template v-slot:append>
+                    <v-icon @click="removeTask(task.id)">mdi-close</v-icon>
+                </template>
             </v-list-item>
           </v-list>
         </v-card-text>
@@ -55,4 +60,8 @@ definePageMeta({
 const totalTask = computed(() => tasks.value.length );
 const todoTask = computed(() => tasks.value.filter(task => task.status === 'TODO').length );
 const doneTask = computed(() => tasks.value.filter(task => task.status === 'DONE').length );
+
+const removeTask = (taskId) => {
+    tasks.value = tasks.value.filter(task => task.id !== taskId)
+}
 </script>
