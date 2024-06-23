@@ -16,10 +16,15 @@ export const LOGOUT = gql`
   }`;
 
 export const FETCH_TASKS = gql`
-  query FetchTask {
-    task {
+  query FetchTask ($user_id: ID!) {
+    task (user_id: $user_id) {
       id
       task
       status
     }
+  }`;
+
+export const DELETE_TASK = gql`
+  mutation DeleteTask ($id: ID!, $user_id: ID!) {
+    deleteTask (id: $id, user_id: $user_id)
   }`;

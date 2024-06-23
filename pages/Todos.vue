@@ -41,8 +41,11 @@
 <script setup>
 import { useLogout } from '~/composables/useLogout';
 import { useFetchTask } from '~/composables/useFetchTask';
+import { useDeleteTask } from '~/composables/useDeleteTask';
+
 const { logout } = useLogout();
 const { getTasks, tasks } = useFetchTask();
+const { deleteTask } = useDeleteTask();
 
 const fetchTask = () => {
     getTasks();
@@ -62,6 +65,8 @@ const todoTask = computed(() => tasks.value.filter(task => task.status === 'TODO
 const doneTask = computed(() => tasks.value.filter(task => task.status === 'DONE').length );
 
 const removeTask = (taskId) => {
-    tasks.value = tasks.value.filter(task => task.id !== taskId)
+    if (deleteTask(taskId)) {
+        tasks.value = tasks.value.filter(task => task.id !== taskId)
+    }
 }
 </script>
