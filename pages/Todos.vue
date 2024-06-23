@@ -23,11 +23,12 @@
                         <v-checkbox-btn
                             v-model="task.status"
                             :value="'done'"
-                            :false-value="'todo'">
+                            :false-value="'todo'"
+                            @change="updateTask(task.id, task.task, task.status)">
                         </v-checkbox-btn>
                     </v-list-item-action>
                 </template>
-                <v-list-item-title>{{ task.task }}</v-list-item-title>
+                <v-list-item-title :class="{'strike-through' : task.status === 'done'}">{{ task.task }}</v-list-item-title>
                 <template v-slot:append>
                     <v-icon @click="removeTask(task.id)">mdi-close</v-icon>
                 </template>
@@ -132,4 +133,14 @@ const addNewTask = async () => {
         }
     }
 }
+
+import { useUpdateTask } from '~/composables/useUpdateTask';
+
+const { updateTask } = useUpdateTask()
 </script>
+
+<style>
+.strike-through {
+    text-decoration: line-through;
+}
+</style>

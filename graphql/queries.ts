@@ -37,3 +37,12 @@ export const CREATE_TASK = gql`
       status
     }
   }`
+
+export const TASK_UPDATE = gql`
+  mutation UpdateTask ($id: ID!, $task: String!, $status: String!, $user_id: ID!) {
+    updateTask(id: $id, task: $task, status: $status, user_id: $user_id) {
+      id
+      task
+      status
+    }
+  }`;
