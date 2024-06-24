@@ -46,3 +46,10 @@ export const TASK_UPDATE = gql`
       status
     }
   }`;
+
+export const REGISTER = gql`
+  mutation Register($first_name: String!, $last_name: String!, $email: String!, $password: String!) {
+    register(first_name: $first_name, last_name: $last_name, email: $email, password: $password) {
+      message
+    }
+  }`;

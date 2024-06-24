@@ -27,7 +27,7 @@
             required
             autocomplete="email"
           ></v-text-field>
-          
+
           <v-text-field
             v-model="password"
             label="Password"
@@ -37,7 +37,7 @@
             autocomplete="current-password"
           ></v-text-field>
           <v-btn type="submit" color="primary">Login</v-btn>
-          <v-btn type="button" color="primary" class="ml-1">Register</v-btn>
+          <v-btn type="button" color="primary" class="ml-1" @click="() => navigateTo('/register')">Register</v-btn>
         </v-form>
       </v-col>
     </v-row>
