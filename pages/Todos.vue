@@ -15,6 +15,7 @@
                 <v-chip color="green" text-color="white">{{ doneTask }} Done</v-chip>
             </div>
         </v-card-title>
+
         <v-card-text>
           <v-list lines="one">
             <v-list-item value="widgets" v-for="task in tasks">

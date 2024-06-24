@@ -5,6 +5,20 @@
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
         <v-form @submit.prevent="login" method="post">
+          <template v-if="loginError">
+            <div>
+              <v-alert
+                v-if="loginError"
+                density="compact"
+                :text="errorMessage"
+                title="Error"
+                type="error"
+                class="mb-4"
+                closable
+              ></v-alert>
+            </div>
+          </template>
+
           <v-text-field
             v-model="email"
             label="Email"
@@ -13,6 +27,7 @@
             required
             autocomplete="email"
           ></v-text-field>
+          
           <v-text-field
             v-model="password"
             label="Password"
@@ -35,5 +50,5 @@ definePageMeta({
 });
 
 import { useLogin } from '~/composables/useLogin';
-const { email, password, login} = useLogin();
+const { email, password, login, errorMessage, loginError } = useLogin();
 </script>

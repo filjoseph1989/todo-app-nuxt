@@ -3,14 +3,18 @@ import { useUserStore } from '~/stores/user';
 import { LOGIN_MUTATION } from '~/graphql/queries';
 
 export const useLogin = () => {
-    const { $graphql, $setAuthToken } = useNuxtApp();
+    const { $graphql } = useNuxtApp();
     const store = useUserStore();
 
-    const email = ref('test@example.com');
-    const password = ref('password');
+    const email = ref('');
+    const password = ref('');
+    const errorMessage = ref('');
+    const loginError = ref(false);
 
     const login = async () => {
         try {
+            loginError.value = false;
+            
             const data = await $graphql.auth.request(LOGIN_MUTATION, {
                 email: email.value,
                 password: password.value
@@ -24,9 +28,12 @@ export const useLogin = () => {
                 // Redirect to page /todos
                 navigateTo('/todos');
             } else {
-                console.log('Invalid email or password');
+                errorMessage.value = 'Invalid email or password';
+                loginError.value = true;
             }
         } catch (error) {
+            errorMessage.value = 'An error occurred while logging in';
+            loginError.value = true;
             console.error(error);
         }
     };
@@ -35,5 +42,7 @@ export const useLogin = () => {
         email,
         password,
         login,
+        errorMessage,
+        loginError,
     };
 }
